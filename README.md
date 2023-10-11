@@ -26,6 +26,8 @@ to be generated. This file is pipe deliminted and is easy to generate using some
 
 **PINGOPORT** _(int)_ - Set the port that Pingo will listen on for Prometheus scrape on the /metrics and /healthcheck endpoints.
 
+**PINGOMTR** _(int)_ - If PINGOMTR is set to any number above 0 it will cause Pingo to issue a quick MTR periodically between configured hosts to record the ASPATH. Uses external MTR executable which must be in PATH. Generates Gauges for each hop under currentPath metric. 
+
 
 
 ## The Pingo config file format:
