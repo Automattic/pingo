@@ -16,17 +16,17 @@ to be generated. This file is pipe deliminted and is easy to generate using some
 
 ## Environment Variables:
 
-**PINGODEBUG** _(int)_ - If PINGODEBUG is set to any number above 0 it will cause Pingo to become very verbose
+**PINGODEBUG** _(int)_ (Optional) - If PINGODEBUG is set to any number above 0 it will cause Pingo to become very verbose
 
-**PINGOTRIGDUMP** _(int)_ - If PINGOTRIGDUMP is set to any number above 0 it will shift how prometheus metrics are compiled.  Normally every 15 seconds each flows prometheus metrics are compiled.  A mutex lock prevents a prometheus scrape from finishing until all flows have finished their dump. Enabling triggered dump will cause the flows to only dump when prometheus actually scrapes the endpoint.  This will drive up scrape time but may provide more real-time statistics.
+**PINGOTRIGDUMP** _(int)_ (Optional) - If PINGOTRIGDUMP is set to any number above 0 it will shift how prometheus metrics are compiled.  Normally every 15 seconds each flows prometheus metrics are compiled.  A mutex lock prevents a prometheus scrape from finishing until all flows have finished their dump. Enabling triggered dump will cause the flows to only dump when prometheus actually scrapes the endpoint.  This will drive up scrape time but may provide more real-time statistics.
 
-**PINGOCONFIG** _(string)_ - Location of the pingo config file that defines pingo flows. 
+**PINGOCONFIG** _(string)_ (Required) - Location of the pingo config file that defines pingo flows. 
 
-**PINGOBUFSIZE** _(int)_ - Set the UDP socket recieve buffer.  This may need to be increased to prevent drops on systems with high numbers of flows.  Be careful! Too high will crash Linux.
+**PINGOBUFSIZE** _(int)_ (Optional) - Set the UDP socket recieve buffer.  This may need to be increased to prevent drops on systems with high numbers of flows.  Be careful! Too high will crash Linux.
 
-**PINGOPORT** _(int)_ - Set the port that Pingo will listen on for Prometheus scrape on the /metrics and /healthcheck endpoints.
+**PINGOPORT** _(int)_ (Required) - Set the port that Pingo will listen on for Prometheus scrape on the /metrics and /healthcheck endpoints.
 
-**PINGOMTR** _(int)_ - If PINGOMTR is set to any number above 0 it will cause Pingo to issue a quick MTR periodically between configured hosts to record the ASPATH. Uses external MTR executable which must be in PATH. Generates Gauges for each hop under currentPath metric. 
+**PINGOMTR** _(int)_ (Optional) - If PINGOMTR is set to any number above 0 it will cause Pingo to issue a quick MTR periodically between configured hosts to record the ASPATH. Uses external MTR executable which must be in PATH. Generates Gauges for each hop under currentPath metric. 
 
 
 
