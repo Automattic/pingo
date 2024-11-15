@@ -83,3 +83,7 @@ Each port to provider map is locally significant, as most work will be done by r
 That is, if 50000-50009 is used for AS1234 in one place, then use that same range for that provider elsewhere, and do not reuse it for other providers.   
 
 Each provider/upstream/link must have a unique port range. 
+
+## Presentations
+
+- NANOG 89 - The Internet X-Ray: Diagnosing ECMP failures from the edge, [Video](https://www.youtube.com/watch?v=O2ctX4BGR_k), [PDF](https://storage.googleapis.com/site-media-prod/meetings/NANOG89/4896/20231018_Leeds_The_Internet_X-Ray__v1.pdf).
