@@ -68,6 +68,22 @@ Those are defined as:
 
 * The rest of the fields are just 0'd out and ignored. 
 
+## Metrics
+
+Metrics are available through the `/metrics` HTTP endpoint in Prometheus Exposition Text Format.
+
+- **udp_sent_total** - Per-flow total number of UDP packets sent, monotonically increasing from zero.
+
+- **udp_received_total** - Per-flow total number of UDP packets received, monotonically increasing from zero.
+
+- **udp_latency_quantile** - Per-flow latency in milliseconds for different percentiles (0, 25, 50, 75, 95, 100, avg), calculated over the time window since the previous dump (see `PINGOTRIGDUMP`). Example: P0 = 9ms, P25 = 28ms, P75 = 81ms, P100 = 155ms. All packets of that flow had 9ms < latency ≤ 155ms in that time window. 25% of them had a latency of ≤ 28ms, 75% had ≤ 81ms, and 25% had > 81ms.
+
+- **pingo_dump_timer** - Time in microseconds spent during the latest dump on lock acquisition and execution.
+
+- **pingo_scrape_timer** - Time in microseconds spent during the current scrape on lock acquisition.
+
+- **udp_current_transit_path** - Number of AS in the path sequence.
+
 ## System design:
 
 Since pingo is a simple engine that initiates/recieves pings and generates statistics, it has no method by which to dictate the path a given ping will take.  This is typically done by building a PBR or policy based route that will ensure that packets sent by pingo are routed via a given transit provider or link.  The PBR should be based on the UDP source port of the packet.  For example:
