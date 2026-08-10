@@ -808,8 +808,6 @@ func main() {
 
 	remoteDetails := make(pingTuple) //Build the map of all the various flows we'll be using along with their dedicated channels
 
-	triggeredDump = false //Probably read this from an environment variable later. Decides if metric dumping is triggered by prometheus scrape or if it runs in a timer.
-
 	//Build a prometheus registry for our metrics
 	promReg := prometheus.NewRegistry()
 	promReg.MustRegister(udpSent, udpRecv, udpLatency, pingoDump, pingoScrape, currentPath)
