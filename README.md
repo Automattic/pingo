@@ -24,7 +24,7 @@ to be generated. This file is pipe deliminted and is easy to generate using some
 
 **PINGOBUFSIZE** _(int)_ (Optional) - Set the UDP socket recieve buffer.  This may need to be increased to prevent drops on systems with high numbers of flows.  Be careful! Too high will crash Linux.
 
-**PINGOPORT** _(int)_ (Required) - Set the port that Pingo will listen on for Prometheus scrape on the /metrics and /healthcheck endpoints.
+**PINGOPORT** _(int)_ (Optional) - Set the port that Pingo will listen on for Prometheus scrape on the `/metrics` and `/healthcheck` endpoints.  Defaults to 9106.
 
 **PINGOMTR** _(int)_ (Optional) - If set to any non-empty value it will cause Pingo to issue a quick MTR periodically between configured hosts to record the ASPATH. Uses external MTR executable which must be in PATH. Generates Gauges for each hop under currentPath metric.
 
