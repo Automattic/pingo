@@ -6,7 +6,6 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/hex"
-	"fmt"
 	"github.com/montanaflynn/stats"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promauto"
@@ -816,7 +815,7 @@ func main() {
 	promReg := prometheus.NewRegistry()
 	promReg.MustRegister(udpSent, udpRecv, udpLatency, pingoDump, pingoScrape, currentPath)
 
-	fmt.Println(join("Opening config file from: ", pingoConfig))
+	log.Println(join("Opening config file from: ", pingoConfig))
 
 	// Read in config file
 	file, err := os.Open(pingoConfig)
@@ -857,7 +856,7 @@ func main() {
 
 	//Start receivers
 	for key, _ := range remoteDetails {
-		fmt.Println(join("Opening receiver on ", strconv.FormatInt(remoteDetails[key].LPORT, 10)))
+		log.Println(join("Opening receiver on ", strconv.FormatInt(remoteDetails[key].LPORT, 10)))
 		go receiver(remoteDetails, remoteDetails[key].LPORT, key)
 	}
 
@@ -869,7 +868,7 @@ func main() {
 
 	*/
 
-	fmt.Println("Finished opening pingers")
+	log.Println("Finished opening pingers")
 
 	http.Handle("/metrics", promScrapeMiddleware(promhttp.HandlerFor(promReg, promhttp.HandlerOpts{})))
 	http.HandleFunc("/healthcheck", healthCheck)
