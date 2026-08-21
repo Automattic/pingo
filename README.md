@@ -1,6 +1,6 @@
 # Pingo
 
-## Pingo is a network statistics generation engine writtin in Golang.
+## Pingo is a network statistics generation engine written in Golang.
 
 Pingo generates a series of UDP "pings" to various destinations where a remote Pingo responder bounces them back.  
 By including a timecode in each ping, several statistics can be built showing latency, loss, and even the effect of ECMP on the underlying network.
@@ -11,8 +11,8 @@ Suggested analysis by using the Pingo Grafana dashboard.
 
 ## Usage:
 
-After building, pingo is configured by setting several environment variables and specifying a config file.  The config file contains a list of ports on which to open a receieve listener, as well as a definition for each flow
-to be generated. This file is pipe deliminted and is easy to generate using some form of script. 
+After building, pingo is configured by setting several environment variables and specifying a config file.  The config file contains a list of ports on which to open a receive listener, as well as a definition for each flow
+to be generated. This file is pipe delimited and is easy to generate using some form of script. 
 
 ## Environment Variables:
 
@@ -22,7 +22,7 @@ to be generated. This file is pipe deliminted and is easy to generate using some
 
 **PINGOCONFIG** _(string)_ (Required) - Location of the pingo config file that defines pingo flows. 
 
-**PINGOBUFSIZE** _(int)_ (Optional) - Set the UDP socket recieve buffer.  This may need to be increased to prevent drops on systems with high numbers of flows.  Be careful! Too high will crash Linux.
+**PINGOBUFSIZE** _(int)_ (Optional) - Set the UDP socket receive buffer.  This may need to be increased to prevent drops on systems with high numbers of flows.  Be careful! Too high will crash Linux.
 
 **PINGOPORT** _(int)_ (Optional) - Set the port that Pingo will listen on for Prometheus scrape on the `/metrics` and `/healthcheck` endpoints.  Defaults to 9106.
 
@@ -53,7 +53,7 @@ Those are defined as:
 - **interval** - Interval between successive packets on this flow.  0.5 is a good number. 
 
 
-Given the bidirecitonal nature of Pingo, only one side of a pair of hosts has to initiate pings in order to get useful information for both directions.  Many remote hosts that don't initiate will only open a series of reciever
+Given the bidirectional nature of Pingo, only one side of a pair of hosts has to initiate pings in order to get useful information for both directions.  Many remote hosts that don't initiate will only open a series of receiver
 ports that allow them to respond to pingo pings.  This is configured in a very similar format as outbound pinging
 
 RECV|localip|lport|0|0|0|0|0|0
@@ -64,7 +64,7 @@ Those are defined as:
 
 - **localip** - The local IP address that we will listen for pingo pings on. 
 
-- **lport** - The local UDP port that we will listen ofr pingo pings on. 
+- **lport** - The local UDP port that we will listen for pingo pings on. 
 
 * The rest of the fields are just 0'd out and ignored. 
 
@@ -86,12 +86,12 @@ Metrics are available through the `/metrics` HTTP endpoint in Prometheus Exposit
 
 ## System design:
 
-Since pingo is a simple engine that initiates/recieves pings and generates statistics, it has no method by which to dictate the path a given ping will take.  This is typically done by building a PBR or policy based route that will ensure that packets sent by pingo are routed via a given transit provider or link.  The PBR should be based on the UDP source port of the packet.  For example:
+Since pingo is a simple engine that initiates/receives pings and generates statistics, it has no method by which to dictate the path a given ping will take.  This is typically done by building a PBR or policy based route that will ensure that packets sent by pingo are routed via a given transit provider or link.  The PBR should be based on the UDP source port of the packet.  For example:
 
 
 - Create a PBR that routes packets sent on ports 50000-50009 to transit provider 1
 
-- Create a PBR that routse packets sent on ports 50010-50019 to transit provider 2. 
+- Create a PBR that routes packets sent on ports 50010-50019 to transit provider 2. 
 
 
 Each port to provider map is locally significant, as most work will be done by referencing the "pbr" and "rpbr" labels in Prometheus which can be set arbitrarily. That said, it's helpful to make sure that each port range is globally unique to a given upstream provider.  
