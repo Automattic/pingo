@@ -512,7 +512,7 @@ func dumper(destMap pingTuple, mapEntry string) {
 
 		//Lock on MUTEX here.
 		if triggeredDump == false {
-			time.Sleep(time.Second * 15) // Run every 10 seconds
+			time.Sleep(time.Second * 15) // Run every 15 seconds
 		}
 
 		dumpStart := time.Now().UnixMicro()   // We're going to instrument this to see how long a dump routine usually takes.
@@ -807,8 +807,6 @@ func main() {
 	}
 
 	remoteDetails := make(pingTuple) //Build the map of all the various flows we'll be using along with their dedicated channels
-
-	triggeredDump = false //Probably read this from an environment variable later. Decides if metric dumping is triggered by prometheus scrape or if it runs in a timer.
 
 	//Build a prometheus registry for our metrics
 	promReg := prometheus.NewRegistry()
