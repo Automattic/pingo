@@ -516,8 +516,10 @@ func dumper(destMap pingTuple, mapEntry string) {
 		}
 
 		dumpStart := time.Now().UnixMicro()   // We're going to instrument this to see how long a dump routine usually takes.
+		debugLog("Dump started at:", strconv.FormatInt(dumpStart, 10))
 		dumpLock.RLock()                      //Institute a read lock.
 		dumpLockAcq := time.Now().UnixMicro() // We're going to instrument this to see how long a dump routine usually takes.
+		debugLog("Dump-Lock acquired at:", strconv.FormatInt(dumpLockAcq, 10))
 
 		recvChan := destMap[mapEntry].RECVCHAN
 		sendChan := destMap[mapEntry].SENDCHAN
@@ -668,6 +670,7 @@ func dumper(destMap pingTuple, mapEntry string) {
 		lastDump = time.Now().UnixMilli() //We'll log the last time we completed a dump of this flow.
 
 		dumpEnd := time.Now().UnixMicro() // We're going to instrument this to see how long a dump routine usually takes.
+		debugLog("Dump completed at:", strconv.FormatInt(dumpEnd, 10))
 		pingoDump.WithLabelValues(
 			destMap[mapEntry].DSTDC,
 			destMap[mapEntry].LOCALIP,
@@ -728,17 +731,17 @@ func promScrapeMiddleware(h http.Handler) http.HandlerFunc {
 		if triggeredDump == false {
 			scrapeStart := time.Now().UnixMicro() // We're going to instrument this to see how long a scrape routine usually takes.
 
-			debugLog("Dump start at:", strconv.FormatInt(scrapeStart, 10))
+			debugLog("Scrape started at:", strconv.FormatInt(scrapeStart, 10))
 
 			dumpLock.Lock() //Lock the dumplock mutex when we begin a scrape. We want to pause all the dumpers before they begin their next dump while we let prometheus scrape.
 
 			scrapeLockAcq := time.Now().UnixMicro() // We're going to instrument this to see how long a scrape routine usually takes.
-			debugLog("Lock Acquired at:", strconv.FormatInt(scrapeLockAcq, 10))
+			debugLog("Scrape-Lock acquired at:", strconv.FormatInt(scrapeLockAcq, 10))
 
 			pingoScrape.WithLabelValues("lock").Set(float64(scrapeLockAcq - scrapeStart))
 
 			h.ServeHTTP(w, r) // call ServeHTTP on the original handler
-			debugLog("Dump Complete:", strconv.FormatInt(time.Now().UnixMicro(), 10))
+			debugLog("Scrape completed at:", strconv.FormatInt(time.Now().UnixMicro(), 10))
 
 			dumpLock.Unlock() //Unlock the mutex.
 		} else {
@@ -746,15 +749,15 @@ func promScrapeMiddleware(h http.Handler) http.HandlerFunc {
 			dumpLock.Unlock()                     //Unlock the dumplock.  This will uncork all the read locked dummpers and let them complete.
 			time.Sleep(time.Millisecond * 100)    //Sleep a bit while the dumpers get sorted.
 			scrapeStart := time.Now().UnixMicro() // We're going to instrument this to see how long a scrape routine usually takes.
-			debugLog("Dump start at:", strconv.FormatInt(scrapeStart, 10))
+			debugLog("Scrape started at:", strconv.FormatInt(scrapeStart, 10))
 			dumpLock.Lock()                         //Relock the mutex. By this point all the read locks should have started and we'll block here waiting for them to finish their work.
 			scrapeLockAcq := time.Now().UnixMicro() // We're going to instrument this to see how long a scrape routine usually takes.
-			debugLog("Lock Acquired at:", strconv.FormatInt(scrapeLockAcq, 10))
+			debugLog("Scrape-Lock acquired at:", strconv.FormatInt(scrapeLockAcq, 10))
 
 			pingoScrape.WithLabelValues("lock").Set(float64(scrapeLockAcq - scrapeStart))
 
 			h.ServeHTTP(w, r) // call ServeHTTP on the original handler to serve up prometheus metrics.
-			debugLog("Dump Complete:", strconv.FormatInt(time.Now().UnixMicro(), 10))
+			debugLog("Scrape completed at:", strconv.FormatInt(time.Now().UnixMicro(), 10))
 
 		}
 
