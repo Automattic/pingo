@@ -738,7 +738,7 @@ func promScrapeMiddleware(h http.Handler) http.HandlerFunc {
 			pingoScrape.WithLabelValues("lock").Set(float64(scrapeLockAcq - scrapeStart))
 
 			h.ServeHTTP(w, r) // call ServeHTTP on the original handler
-			debugLog("Dump Complete:", strconv.FormatInt(time.Now().UnixMilli(), 10))
+			debugLog("Dump Complete:", strconv.FormatInt(time.Now().UnixMicro(), 10))
 
 			dumpLock.Unlock() //Unlock the mutex.
 		} else {
@@ -754,7 +754,7 @@ func promScrapeMiddleware(h http.Handler) http.HandlerFunc {
 			pingoScrape.WithLabelValues("lock").Set(float64(scrapeLockAcq - scrapeStart))
 
 			h.ServeHTTP(w, r) // call ServeHTTP on the original handler to serve up prometheus metrics.
-			debugLog("Dump Complete:", strconv.FormatInt(time.Now().UnixMilli(), 10))
+			debugLog("Dump Complete:", strconv.FormatInt(time.Now().UnixMicro(), 10))
 
 		}
 
