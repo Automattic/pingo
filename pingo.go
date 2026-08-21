@@ -512,7 +512,7 @@ func dumper(destMap pingTuple, mapEntry string) {
 
 		//Lock on MUTEX here.
 		if triggeredDump == false {
-			time.Sleep(time.Second * 15) // Run every 10 seconds
+			time.Sleep(time.Second * 15) // Run every 15 seconds
 		}
 
 		dumpStart := time.Now().UnixMicro()   // We're going to instrument this to see how long a dump routine usually takes.
