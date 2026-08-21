@@ -254,7 +254,6 @@ func getSysIP(ipList []string, getbyhostname bool) []net.IP {
 		var ips []net.IP
 		for i := 0; i < len(ipList); i++ {
 			ip := net.ParseIP(ipList[i])
-			log.Println(ip)
 
 			ips = append(ips, ip)
 		}
@@ -301,12 +300,12 @@ func openPingSocket(portNum int, ipver int, sourceIP string) (net.PacketConn, er
 
 			if len(os.Getenv("PINGOBUFSIZE")) > 0 { //Lets see if the env variable is set.
 				bufsize := os.Getenv("PINGOBUFSIZE")
-				log.Println("Buffer size environment variable was set. it is:" + bufsize)
+				log.Println("Buffer size environment variable was set. it is: " + bufsize)
 
 				buf, err := strconv.Atoi(bufsize)
 
 				if err != nil {
-					log.Println("Buffer" + bufsize + " size could not be converted from string. Leaving at default")
+					log.Println("Buffer size " + bufsize + " could not be converted from string. Leaving at default")
 				} else {
 					rcvbufsize = buf
 				}
@@ -335,7 +334,7 @@ func openPingSocket(portNum int, ipver int, sourceIP string) (net.PacketConn, er
 	}
 
 	lp, err := lc.ListenPacket(context.Background(), udpVer, portToOpen)
-	log.Println("Opening" + udpVer + " socket on " + portToOpen)
+	log.Println("Opening " + udpVer + " socket on " + portToOpen)
 
 	return lp, err
 }
@@ -817,7 +816,7 @@ func main() {
 	promReg := prometheus.NewRegistry()
 	promReg.MustRegister(udpSent, udpRecv, udpLatency, pingoDump, pingoScrape, currentPath)
 
-	fmt.Println(join("Opening config file from:", pingoConfig))
+	fmt.Println(join("Opening config file from: ", pingoConfig))
 
 	// Read in config file
 	file, err := os.Open(pingoConfig)
